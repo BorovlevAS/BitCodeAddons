@@ -17,6 +17,8 @@ class StockMove(models.Model):
         compute="_quantity_15c_done_compute",
         digits="Product Unit of Measure",
         inverse="_quantity_15c_done_set",
+        store=True,
+        compute_sudo=True,
     )
 
     @api.depends(
