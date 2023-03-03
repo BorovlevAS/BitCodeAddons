@@ -9,7 +9,13 @@
                 <field name="biko_density_fact" optional="show" readonly="1"/>
                 <field name="biko_density_15c" optional="show" readonly="1"/>
                 <field name="biko_product_qty_15c" optional="show" readonly="1"/>
-                <field name="biko_product_qty_15c_done" />
+                <field name="is_quantity_15c_done_editable" invisible="1"/>
+                <field name="biko_product_qty_15c_done" 
+                    attrs="{'readonly': [('is_quantity_15c_done_editable', '=', False)], 
+                        'column_invisible':[
+                            ('parent.state', '=', 'draft'), 
+                            ('parent.immediate_transfer', '=', False)
+                        ]}"/>
             </xpath>
         </field>
     </record>

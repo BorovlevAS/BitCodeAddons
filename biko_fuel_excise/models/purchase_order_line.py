@@ -130,3 +130,15 @@ class PurchaseOrderLine(models.Model):
         if "biko_product_qty_15c" in values:
             lines._create_or_update_picking()
         return result
+
+    def _prepare_account_move_line(self, move=False):
+        self.ensure_one()
+        res = super(PurchaseOrderLine, self)._prepare_account_move_line(move=move)
+        res.update(
+            {
+                "biko_density_fact": self.biko_density_fact,
+                "biko_density_15c": self.biko_density_15c,
+                "biko_product_qty_15c": self.biko_product_qty_15c,
+            }
+        )
+        return res
