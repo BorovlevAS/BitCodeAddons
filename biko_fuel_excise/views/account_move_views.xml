@@ -6,9 +6,22 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@id='invoice_tab']//tree/field[@name='product_uom_id']" position="after">
-                <field name="biko_density_fact" attrs="{'invisible': [('parent.move_type', 'in', ('out_invoice', 'in_invoice'))]}" readonly="1" optional="show"/>
-                <field name="biko_density_15c" attrs="{'invisible': [('parent.move_type', 'in', ('out_invoice', 'in_invoice'))]}" readonly="1" optional="show"/>
-                <field name="biko_product_qty_15c" attrs="{'invisible': [('parent.move_type', 'in', ('out_invoice', 'in_invoice'))]}" optional="show"/>
+                <field name="biko_density_fact" attrs="{'column_invisible': [('parent.move_type', 'not in', ('out_invoice', 'in_invoice'))]}" readonly="1" optional="show"/>
+                <field name="biko_density_15c" attrs="{'column_invisible': [('parent.move_type', 'not in', ('out_invoice', 'in_invoice'))]}" readonly="1" optional="show"/>
+                <field name="biko_product_qty_15c" attrs="{'column_invisible': [('parent.move_type', 'not in', ('out_invoice', 'in_invoice'))]}" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="biko_view_move_line_tree_bc_m_3_inherit" model="ir.ui.view">
+        <field name="name">BIKO: adding fuel fields</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <field name="biko_density_fact" optional="show"/>
+                <field name="biko_density_15c" optional="show"/>
+                <field name="biko_product_qty_15c" optional="show"/>
             </xpath>
         </field>
     </record>
