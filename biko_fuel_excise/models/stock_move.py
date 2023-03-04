@@ -7,11 +7,9 @@ from odoo.exceptions import UserError
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    biko_density_fact = fields.Float(string="Density", default=0.0, copy=False)
-    biko_density_15c = fields.Float(string="Density at 15 C", default=0.0, copy=False)
-    biko_product_qty_15c = fields.Float(
-        string="Quantity at 15 C", default=0.0, copy=False
-    )
+    biko_density_fact = fields.Float(string="Density", default=0.0)
+    biko_density_15c = fields.Float(string="Density at 15 C", default=0.0)
+    biko_product_qty_15c = fields.Float(string="Quantity at 15 C", default=0.0)
     biko_product_qty_15c_done = fields.Float(
         string="Quantity at 15C Done",
         compute="_quantity_15c_done_compute",
@@ -64,7 +62,7 @@ class StockMove(models.Model):
             for move in self:
                 quantity_15c_done = 0
                 for move_line in move._get_move_lines():
-                    quantity_15c_done += move_line.quantity_15c_done
+                    quantity_15c_done += move_line.biko_product_qty_15c_done
                 move.biko_product_qty_15c_done = quantity_15c_done
         else:
             # compute
@@ -92,9 +90,8 @@ class StockMove(models.Model):
                 )
 
     def _quantity_15c_done_set(self):
-        quantity_15c_done = self[
-            0
-        ].biko_product_qty_15c_done  # any call to create will invalidate `move.quantity_done`
+        # any call to create will invalidate `move.quantity_done`
+        quantity_15c_done = self[0].biko_product_qty_15c_done
         for move in self:
             move_lines = move._get_move_lines()
             if not move_lines:
@@ -133,17 +130,10 @@ class StockMove(models.Model):
 
         vals = super(StockMove, self)._prepare_move_line_vals(quantity, reserved_quant)
 
-        vals = {
-            "move_id": self.id,
-            "product_id": self.product_id.id,
-            "product_uom_id": self.product_uom.id,
-            "location_id": self.location_id.id,
-            "location_dest_id": self.location_dest_id.id,
-            "picking_id": self.picking_id.id,
-            "company_id": self.company_id.id,
-        }
         if biko_product_qty_15c:
             vals = dict(vals, biko_product_qty_15c=biko_product_qty_15c)
+        else:
+            vals = dict(vals, biko_product_qty_15c=self.biko_product_qty_15c)
 
         return vals
 
@@ -153,3 +143,27 @@ class StockMove(models.Model):
         res.update({"biko_product_qty_15c": sum(self.mapped("biko_product_qty_15c"))})
 
         return res
+
+    def _prepare_procurement_values(self):
+        proc_values = super()._prepare_procurement_values()
+        proc_values.update(
+            {
+                "biko_density_fact": self.biko_density_fact,
+                "biko_density_15c": self.biko_density_15c,
+                "biko_product_qty_15c": self.biko_product_qty_15c,
+            }
+        )
+        return proc_values
+
+    def _set_quantities_to_reservation(self):
+        super(StockMove, self)._set_quantities_to_reservation()
+
+        for move in self:
+            if move.state not in ("partially_available", "assigned"):
+                continue
+            for move_line in move.move_line_ids:
+                if move.has_tracking != "none" and not (
+                    move_line.lot_id or move_line.lot_name
+                ):
+                    continue
+                move_line.biko_product_qty_15c_done = move_line.biko_product_qty_15c

@@ -8,6 +8,7 @@
         "sale",
         "purchase",
         "stock",
+        "sale_stock",
     ],
     "data": [
         "views/sale_order_views.xml",
