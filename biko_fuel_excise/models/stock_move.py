@@ -49,14 +49,7 @@ class StockMove(models.Model):
         "picking_type_id.show_reserved",
     )
     def _quantity_15c_done_compute(self):
-        """This field represents the sum of the move lines `qty_done`. It allows the user to know
-        if there is still work to do.
 
-        We take care of rounding this value at the general decimal precision and not the rounding
-        of the move's UOM to make sure this value is really close to the real sum, because this
-        field will be used in `_action_done` in order to know if the move will need a backorder or
-        an extra move.
-        """
         if not any(self._ids):
             # onchange
             for move in self:
