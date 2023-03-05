@@ -1,0 +1,52 @@
+with 
+products as (
+	select pp.id,pt.name
+	from product_product as pp
+	left join product_template as pt on (pp.product_tmpl_id=pt.id)
+),
+locations as (
+	select id, complete_name as name
+	from stock_location
+	where stock_location.company_id=1 and stock_location.usage='internal'
+),
+moves as (
+	select 
+		sml.product_id, 
+		sml.id as move_id,
+		sml.date,
+		sml.location_dest_id as location_id,
+		locations.name,
+		case when (location_dest_id=locations.id and sml.date <'2023-03-05') then sml.biko_product_qty_15c_done else 0 end as qty_start,
+		case when (location_dest_id=locations.id and sml.date >='2023-03-05' and sml.date <'2023-03-06') then sml.biko_product_qty_15c_done else 0 end as qty_plus,
+		0 as qty_minus,
+		case when (location_dest_id=locations.id and sml.date <'2023-03-06') then sml.biko_product_qty_15c_done else 0 end as qty_end
+	from locations
+	left join stock_move_line as sml on (sml.location_dest_id=locations.id)
+	UNION ALL
+	select 
+		sml.product_id, 
+		sml.move_id,
+		sml.date,
+		sml.location_id,
+		locations.name,
+		case when (location_id=locations.id  and sml.date <'2023-03-05') then -sml.biko_product_qty_15c_done else 0 end,
+		0,
+		case when (location_id=locations.id and sml.date >='2023-03-05' and sml.date <'2023-03-06') then -sml.biko_product_qty_15c_done else 0 end,
+		case when (location_id=locations.id  and sml.date <'2023-03-06') then -sml.biko_product_qty_15c_done else 0 end
+	from stock_move_line as sml
+	right join locations on (sml.location_id=locations.id)
+)
+
+select moves.product_id, 
+	products.name,
+	moves.location_id, 
+	moves.name, 
+	sum(moves.qty_start) as qty_start,
+	sum(moves.qty_plus) as qty_plus,
+	sum(moves.qty_minus) as qty_minus,
+	sum(moves.qty_end) as qty_end
+from moves
+left join products on (product_id=products.id)
+where moves.product_id is not null
+group by (products.name,moves.product_id,moves.location_id,moves.name)
+order by moves.product_id, moves.location_id

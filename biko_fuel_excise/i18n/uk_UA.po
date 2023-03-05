@@ -1,13 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* biko_so_add_fuel_fields
+# 	* biko_fuel_excise
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0+e-20221228\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-01 15:49+0000\n"
-"PO-Revision-Date: 2023-03-01 17:52+0200\n"
+"POT-Creation-Date: 2023-03-05 15:57+0000\n"
+"PO-Revision-Date: 2023-03-05 18:06+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: uk_UA\n"
@@ -17,22 +17,115 @@ msgstr ""
 "Plural-Forms: \n"
 "X-Generator: Poedit 3.2.2\n"
 
-#. module: biko_so_add_fuel_fields
-#: model:ir.model.fields,field_description:biko_so_add_fuel_fields.field_sale_order_line__biko_density_fact
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_sale_order_line__biko_qty_15c_deliv
+msgid "15 C Delivered"
+msgstr "Дост. 15С"
+
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_sale_order_line__biko_qty_15c_invoiced
+msgid "15 C Invoiced"
+msgstr "Виставлено (15С)"
+
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_sale_order_line__biko_qty_15c_to_invoice
+msgid "15 C To Inv"
+msgstr "Для рах. 15С"
+
+#. module: biko_fuel_excise
+#: code:addons/biko_fuel_excise/models/stock_move.py:0
+#, python-format
+msgid ""
+"Cannot set the done quantity from this stock move, work directly with the "
+"move lines."
+msgstr ""
+"Неможливо встановити виконану кількість з цього переміщення запасу, "
+"працюйте безпосередньо з рядками переміщення."
+
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_account_move_line__biko_density_fact
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_purchase_order_line__biko_density_fact
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_sale_order_line__biko_density_fact
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move__biko_density_fact
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move_line__biko_density_fact
 msgid "Density"
 msgstr "Густина"
 
-#. module: biko_so_add_fuel_fields
-#: model:ir.model.fields,field_description:biko_so_add_fuel_fields.field_sale_order_line__biko_density_15c
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_account_move_line__biko_density_15c
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_purchase_order_line__biko_density_15c
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_sale_order_line__biko_density_15c
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move__biko_density_15c
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move_line__biko_density_15c
 msgid "Density at 15 C"
 msgstr "Густина при 15 С"
 
-#. module: biko_so_add_fuel_fields
-#: model:ir.model.fields,field_description:biko_so_add_fuel_fields.field_sale_order_line__biko_product_qty_15c
-msgid "Quantity at 15 C"
-msgstr "Кількість в літрах при 15 С"
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move__is_quantity_15c_done_editable
+msgid "Is quantity 15C done editable"
+msgstr "Чи можна редагувати кількість 15C"
 
-#. module: biko_so_add_fuel_fields
-#: model:ir.model,name:biko_so_add_fuel_fields.model_sale_order_line
+#. module: biko_fuel_excise
+#: model:ir.model,name:biko_fuel_excise.model_account_move_line
+msgid "Journal Item"
+msgstr "Елемент журналу"
+
+#. module: biko_fuel_excise
+#: code:addons/biko_fuel_excise/models/procurement_group.py:0
+#: code:addons/biko_fuel_excise/models/stock_rule.py:0
+#, python-format
+msgid ""
+"No rule has been found to replenish \"%s\" in \"%s\".\n"
+"Verify the routes configuration on the product."
+msgstr ""
+"Не знайдено правила для попвнення \"%s\" на \"%s\".\n"
+"Перевірте конфігурацію маршрутів для продукту."
+
+#. module: biko_fuel_excise
+#: model:ir.model,name:biko_fuel_excise.model_procurement_group
+msgid "Procurement Group"
+msgstr "Група забезпечення"
+
+#. module: biko_fuel_excise
+#: model:ir.model,name:biko_fuel_excise.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Переміщення товару (Рядок складського переміщення)"
+
+#. module: biko_fuel_excise
+#: model:ir.model,name:biko_fuel_excise.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Рядок замовлення на купівлю"
+
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_account_move_line__biko_product_qty_15c
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_purchase_order_line__biko_product_qty_15c
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_sale_order_line__biko_product_qty_15c
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move__biko_product_qty_15c
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move_line__biko_product_qty_15c
+msgid "Quantity at 15 C"
+msgstr "Кількість (15 С)"
+
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move_line__biko_product_qty_15c_done
+msgid "Quantity at 15 C Done"
+msgstr "Виконано (15 С)"
+
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_stock_move__biko_product_qty_15c_done
+msgid "Quantity at 15C Done"
+msgstr "Виконано (15 С)"
+
+#. module: biko_fuel_excise
+#: model:ir.model,name:biko_fuel_excise.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Рядок замовлення на продаж"
+
+#. module: biko_fuel_excise
+#: model:ir.model,name:biko_fuel_excise.model_stock_move
+msgid "Stock Move"
+msgstr "Складське переміщення"
+
+#. module: biko_fuel_excise
+#: model:ir.model,name:biko_fuel_excise.model_stock_rule
+msgid "Stock Rule"
+msgstr "Складське правило"

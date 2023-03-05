@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <odoo>
-    
+
     <record id="biko_view_order_form_bc_m_1" model="ir.ui.view">
         <field name="name">BIKO: adding fuel fields</field>
         <field name="model">sale.order</field>
@@ -10,6 +10,8 @@
                 <field name="biko_density_fact" optional="show"/>
                 <field name="biko_density_15c" optional="show"/>
                 <field name="biko_product_qty_15c" optional="show"/>
+                <field name="biko_qty_15c_deliv" optional="show"/>
+                <field name="biko_qty_15c_invoiced" optional="show"/>
             </xpath>
         </field>
     </record>
