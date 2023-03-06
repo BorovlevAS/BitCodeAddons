@@ -6,7 +6,9 @@
         <field name="arch" type="xml">
             <form string="Stock 15C report wizard">
                 <sheet>
-                    <field name="company_id"/>
+                    <group>
+                        <field name="company_id"/>
+                    </group>
                     <label for="start_date" string="Period report print"/>
                     <div class="o_row">
                         <field name="start_date" nolabel="1" class="oe_inline" />
