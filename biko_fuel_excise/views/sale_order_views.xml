@@ -8,9 +8,9 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
                 <field name="biko_density_fact" optional="show"/>
+                <field name="biko_kg_qty_15c" optional="show"/>
                 <field name="biko_density_15c" optional="show"/>
                 <field name="biko_product_qty_15c" optional="show"/>
-                <field name="biko_kg_qty_15c" optional="show"/>
                 <field name="biko_qty_15c_deliv" optional="show"/>
                 <field name="biko_qty_15c_invoiced" optional="show"/>
             </xpath>

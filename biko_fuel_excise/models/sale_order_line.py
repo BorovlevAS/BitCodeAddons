@@ -261,3 +261,8 @@ class SaleOrderLine(models.Model):
             }
         )
         return res
+
+    @api.onchange("product_uom_qty", "biko_density_fact")
+    def _onchange_product_uom_qty(self):
+        for rec in self:
+            rec.biko_kg_qty_15c = rec.product_uom_qty * rec.biko_density_fact
