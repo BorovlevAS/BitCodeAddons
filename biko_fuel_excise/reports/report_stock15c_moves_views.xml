@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="biko_stock15c_moves" model="ir.ui.view">
+        <field name="name">BIKO: Stock 15C Moves</field>
+        <field name="model">stock.15c.moves.report</field>
+        <field name="arch" type="xml">
+            <pivot string="stock15c_moves_pivot" disable_linking="1">
+                <field name="location_id" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="qty_start" type="measure"/>
+                <field name="qty_in" type="measure"/>
+                <field name="qty_out" type="measure"/>
+                <field name="qty_end" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="biko_stock15c_moves_search" model="ir.ui.view">
+        <field name="name">BIKO: Stock 15C Moves (search view)</field>
+        <field name="model">stock.15c.moves.report</field>
+        <field name="arch" type="xml">
+            <search string="Stock 15C Moves">
+                <group expand="0" string="Group By">
+                    <filter string="Warehouse" name="group_warehouse_id" context="{'group_by': 'location_id'}" />
+                    <filter string="Product Category" name="group_category_id" context="{'group_by': 'category_id'}" />
+                    <filter string="Product" name="group_product_id" context="{'group_by': 'product_id'}" />
+
+                    <field name="product_id" string="Product"/>
+                    <field name="location_id" string="Warehouse"/>
+                    <field name="category_id" string="Category"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

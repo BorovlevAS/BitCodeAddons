@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="biko_stock_15c_moves_wizard_views" model="ir.ui.view">
+        <field name="name">BIKO: report wizard</field>
+        <field name="model">stock.15c.moves.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Stock 15C report wizard">
+                <sheet>
+                    <field name="company_id"/>
+                    <label for="start_date" string="Period report print"/>
+                    <div class="o_row">
+                        <field name="start_date" nolabel="1" class="oe_inline" />
+                        <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                        <field name="end_date" nolabel="1" class="oe_inline" />
+                    </div>
+                </sheet>
+                <footer>
+                    <group>
+                        <button name="open_report" string="Open report" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </group>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- menu -->
+    <record id="action_stock_15c_moves_wizard" model="ir.actions.act_window">
+        <field name="name">Stock 15C Moves Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.15c.moves.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="biko_stock_15c_moves_wizard_views"/>
+    </record>
+
+    <menuitem id="menu_stock_15c_moves" name="Stock 15C Moves Report" parent="stock.menu_warehouse_report" sequence="101" action="biko_fuel_excise.action_stock_15c_moves_wizard"/>
+
+</odoo>

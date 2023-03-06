@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_biko_rq_wizard,access.biko_report.stock_15c_moves_wizard,model_stock_15c_moves_wizard,base.group_user,1,1,1,1
+access_biko_rq_report,access.biko_report.stock_15c_moves_report,model_stock_15c_moves_report,base.group_user,1,1,1,1

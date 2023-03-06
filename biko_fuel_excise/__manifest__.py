@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "BIKO: Модуль добавляет логику работы с ",
-    "version": "15.0.1.1.1",
+    "version": "15.0.1.1.4",
     "author": "Borovlev A.S.",
     "company": "BIKO Solutions",
     "depends": [
@@ -16,6 +16,9 @@
         "views/stock_picking_views.xml",
         "views/stock_move_views.xml",
         "views/account_move_views.xml",
+        "reports/report_stock15c_moves_views.xml",
+        "wizards/stock_15c_moves_wizard_views.xml",
+        "security/ir.model.access.csv",
     ],
     "license": "LGPL-3",
     "installable": True,
