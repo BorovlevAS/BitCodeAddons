@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ 
+    Copyright (C) Cetmix OÜ
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU LESSER GENERAL PUBLIC LICENSE for more details.
+
+    You should have received a copy of the GNU LESSER GENERAL PUBLIC LICENSE
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<odoo>
+    <data noupdate="1">
+        <!-- Default PlantUML Server -->
+        <record id="cx_plantuml_server_url" model="ir.config_parameter">
+            <field name="key">cx_odoo_plantuml.cetmix_plantuml_server_url</field>
+            <field name="value">http://www.plantuml.com/plantuml/png</field>
+        </record>
+        <!-- Default Max Selection Field options shown on schema -->
+        <record id="cx_plantuml_max_selection" model="ir.config_parameter">
+            <field name="key">cx_odoo_plantuml.max_selection</field>
+            <field name="value">12</field>
+        </record>
+    </data>
+</odoo>

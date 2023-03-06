@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="biko_view_picking_form_bc_m_2_inherit" model="ir.ui.view">
+        <field name="name">BIKO: add fuel fields</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='operations']//tree/field[@name='quantity_done']" position="before">
+                <field name="biko_kg_qty_15c" optional="show" readonly="1"/>
+                <field name="biko_density_fact" optional="show" readonly="1"/>
+                <field name="biko_density_15c" optional="show" readonly="1"/>
+                <field name="biko_product_qty_15c" optional="show" readonly="1"/>
+                <field name="is_quantity_15c_done_editable" invisible="1"/>
+                <field name="biko_product_qty_15c_done" attrs="{'readonly': [('is_quantity_15c_done_editable', '=', False)], 
+                        'column_invisible':[
+                            ('parent.state', '=', 'draft'), 
+                            ('parent.immediate_transfer', '=', False)
+                        ]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

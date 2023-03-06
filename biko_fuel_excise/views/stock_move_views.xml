@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="biko_view_stock_move_line_detailed_operation_tree_bc_m_3_inherited" model="ir.ui.view">
+        <field name="name">BIKO: add fuel fields</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <field name="qty_done" position="after">
+                <field name="biko_product_qty_15c_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="biko_view_stock_move_operations_bc_m_3_inherited" model="ir.ui.view">
+        <field name="name">BIKO: add fuel fields</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quantity_done']/../.." position="after">
+                <label for="biko_product_qty_15c" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/>
+                <div class="o_row" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}">
+                    <span>
+                        <field name="biko_product_qty_15c" readonly="1" nolabel="1"/>
+                    </span>
+                    <span>
+                        <field name="product_uom" readonly="1" nolabel="1"/>
+                    </span>
+                </div>
+                <label for="biko_product_qty_15c_done"/>
+                <div class="o_row">
+                    <span>
+                        <field name="biko_product_qty_15c_done" readonly="1" nolabel="1"/>
+                    </span>
+                    <span>
+                        <field name="product_uom" readonly="1" nolabel="1"/>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="biko_view_stock_move_line_operation_tree_bc_m_3_inherited" model="ir.ui.view">
+        <field name="name">BIKO: add fuel fields</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+        <field name="arch" type="xml">
+            <field name="qty_done" position="after">
+                <field name="biko_product_qty_15c_done" attrs="{'readonly': [('state', 'in', ('done', 'cancel')), ('is_locked', '=', True)]}" force_save="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="biko_view_move_line_tree_bc_m_3_inherited" model="ir.ui.view">
+        <field name="name">BIKO: add fuel fields</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="qty_done" position="after">
+                <field name="biko_product_qty_15c_done" />
+            </field>
+        </field>
+    </record>
+</odoo>
