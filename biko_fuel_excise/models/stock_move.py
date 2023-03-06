@@ -10,6 +10,9 @@ class StockMove(models.Model):
     biko_density_fact = fields.Float(string="Density", default=0.0)
     biko_density_15c = fields.Float(string="Density at 15 C", default=0.0)
     biko_product_qty_15c = fields.Float(string="Quantity at 15 C", default=0.0)
+
+    biko_kg_qty_15c = fields.Float(string="Qty in Kg")
+
     biko_product_qty_15c_done = fields.Float(
         string="Quantity at 15C Done",
         compute="_quantity_15c_done_compute",
@@ -123,6 +126,7 @@ class StockMove(models.Model):
 
         vals = super(StockMove, self)._prepare_move_line_vals(quantity, reserved_quant)
 
+        # vals.update({"biko_kg_qty_15c": self.biko_kg_qty_15c})
         if biko_product_qty_15c:
             vals = dict(vals, biko_product_qty_15c=biko_product_qty_15c)
         else:
@@ -144,6 +148,7 @@ class StockMove(models.Model):
                 "biko_density_fact": self.biko_density_fact,
                 "biko_density_15c": self.biko_density_15c,
                 "biko_product_qty_15c": self.biko_product_qty_15c,
+                "biko_kg_qty_15c": self.biko_kg_qty_15c,
             }
         )
         return proc_values

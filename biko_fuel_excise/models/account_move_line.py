@@ -7,3 +7,4 @@ class AccountMoveLine(models.Model):
     biko_density_fact = fields.Float(string="Density")
     biko_density_15c = fields.Float(string="Density at 15 C")
     biko_product_qty_15c = fields.Float(string="Quantity at 15 C")
+    biko_kg_qty_15c = fields.Float(string="Qty in Kg")

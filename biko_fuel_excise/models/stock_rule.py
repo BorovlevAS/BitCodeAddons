@@ -13,7 +13,12 @@ class StockRule(models.Model):
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
-        fields += ["biko_density_fact", "biko_density_15c", "biko_product_qty_15c"]
+        fields += [
+            "biko_density_fact",
+            "biko_density_15c",
+            "biko_product_qty_15c",
+            "biko_kg_qty_15c",
+        ]
         return fields
 
     def _get_stock_move_values(

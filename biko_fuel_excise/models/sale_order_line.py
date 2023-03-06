@@ -9,6 +9,7 @@ class SaleOrderLine(models.Model):
     biko_density_fact = fields.Float(string="Density")
     biko_density_15c = fields.Float(string="Density at 15 C")
     biko_product_qty_15c = fields.Float(string="Quantity at 15 C")
+    biko_kg_qty_15c = fields.Float(string="Qty in Kg")
 
     biko_qty_15c_deliv = fields.Float(
         compute="_compute_biko_qty_15c_deliv",
@@ -119,6 +120,7 @@ class SaleOrderLine(models.Model):
                 "biko_density_fact": self.biko_density_fact,
                 "biko_density_15c": self.biko_density_15c,
                 "biko_product_qty_15c": self.biko_product_qty_15c,
+                "biko_kg_qty_15c": self.biko_kg_qty_15c,
             }
         )
         return values
@@ -255,6 +257,7 @@ class SaleOrderLine(models.Model):
                 "biko_density_fact": self.biko_density_fact,
                 "biko_density_15c": self.biko_density_15c,
                 "biko_product_qty_15c": self.biko_qty_15c_to_invoice,
+                "biko_kg_qty_15c": self.biko_kg_qty_15c,
             }
         )
         return res
