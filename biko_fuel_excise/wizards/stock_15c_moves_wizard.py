@@ -1,3 +1,5 @@
+import uuid
+
 from odoo import api, fields, models, _, tools
 from odoo.exceptions import ValidationError
 
@@ -18,8 +20,10 @@ class Stock15CMovesWizard(models.TransientModel):
         if self.end_date < self.start_date:
             raise ValidationError(_("End Date should be greater than Start Date."))
 
-    def fill_moves_data(self):
-        self.env["stock.15c.moves.report"].sudo().search([]).unlink()
+    def fill_moves_data(self, unique_id):
+        self.env["stock.15c.moves.report"].sudo().search(
+            [("uid", "=", unique_id)]
+        ).unlink()
         sql = """
             with 
                 locations as (
@@ -93,11 +97,14 @@ class Stock15CMovesWizard(models.TransientModel):
         data = self.env.cr.dictfetchall()
 
         for item in data:
+            item.update({"uid": unique_id})
             self.env["stock.15c.moves.report"].sudo().create(item)
 
     def open_report(self):
         self.check_date_range()
-        self.fill_moves_data()
+
+        unique_id = uuid.uuid4().hex
+        self.fill_moves_data(unique_id)
 
         action = {
             "name": "Stock 15C Moves",
@@ -106,6 +113,7 @@ class Stock15CMovesWizard(models.TransientModel):
             "view_type": "pivot",
             "res_model": "stock.15c.moves.report",
             "view_id": self.env.ref("biko_fuel_excise.biko_stock15c_moves").id,
+            "domain": [("uid", "=", unique_id)],
         }
 
         return action

@@ -8,6 +8,7 @@ class ReportStock15CMoves(models.Model):
     # _auto = False
     _description = "Report stock 15C moves"
 
+    uid = fields.Char(readonly=True)
     product_id = fields.Many2one("product.product", "Product", readonly=True)
     category_id = fields.Many2one("product.category", string="Category", readonly=True)
     location_id = fields.Many2one("stock.location", "Location", readonly=True)
