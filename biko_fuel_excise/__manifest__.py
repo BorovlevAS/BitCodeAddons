@@ -16,6 +16,7 @@
         "views/stock_picking_views.xml",
         "views/stock_move_views.xml",
         "views/account_move_views.xml",
+        "views/stock_production_lot_views.xml",
         "reports/report_stock15c_moves_views.xml",
         "wizards/stock_15c_moves_wizard_views.xml",
         "security/ir.model.access.csv",
