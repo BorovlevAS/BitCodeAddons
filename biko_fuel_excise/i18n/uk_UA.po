@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0+e-20221228\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-20 08:32+0000\n"
-"PO-Revision-Date: 2023-03-20 10:38+0200\n"
+"POT-Creation-Date: 2023-03-20 09:52+0000\n"
+"PO-Revision-Date: 2023-03-20 11:54+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: uk_UA\n"
@@ -208,6 +208,11 @@ msgstr "Сформувати звіт"
 #: model_terms:ir.ui.view,arch_db:biko_fuel_excise.biko_stock_15c_moves_wizard_views
 msgid "Period report print"
 msgstr "Період звіту"
+
+#. module: biko_fuel_excise
+#: model:ir.model.fields,field_description:biko_fuel_excise.field_purchase_order_line__biko_price_kg
+msgid "Price, kg"
+msgstr "Ціна за кг."
 
 #. module: biko_fuel_excise
 #: model:ir.model,name:biko_fuel_excise.model_procurement_group
