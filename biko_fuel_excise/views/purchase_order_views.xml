@@ -14,6 +14,10 @@
                         'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))],
                         'required': [('display_type', '=', False)]
                     }" force_save="1" optional="show"/>
+                <field name="biko_price_kg" attrs="{
+                        'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))],
+                        'required': [('display_type', '=', False)]
+                    }" force_save="1" optional="show"/>
                 <field name="biko_density_15c" attrs="{
                         'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))],
                         'required': [('display_type', '=', False)]

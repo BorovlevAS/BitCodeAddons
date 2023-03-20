@@ -49,6 +49,14 @@ class SaleOrderLine(models.Model):
     )
 
     # Form view methods
+    @api.onchange("biko_kg_qty")
+    def _onchange_calculate_density(self):
+        for rec in self:
+            if rec.product_uom_qty:
+                rec.biko_density_fact = rec.biko_kg_qty / rec.product_uom_qty
+            else:
+                rec.biko_density_fact = 0.0
+
     @api.onchange("product_uom_qty", "biko_density_fact")
     def _onchange_product_uom_qty(self):
         for rec in self:

@@ -11,6 +11,8 @@ class PurchaseOrderLine(models.Model):
         string="Quantity, kg",
         digits="Product Unit of Measure",
     )
+    biko_price_kg = fields.Float(string="Price, kg", digits="Product Price")
+
     biko_density_15c = fields.Float(string="Density at 15 C", digits=(6, 4))
     biko_product_qty_15c = fields.Float(
         string="Quantity at 15 C",
@@ -20,6 +22,14 @@ class PurchaseOrderLine(models.Model):
     biko_lot_id = fields.Many2one("stock.production.lot", "Lot", copy=False)
 
     # Form view methods
+    @api.onchange("biko_qty_kg")
+    def _onchange_calculate_density(self):
+        for rec in self:
+            if rec.product_qty:
+                rec.biko_density_fact = rec.biko_qty_kg / rec.product_qty
+            else:
+                rec.biko_density_fact = 0.0
+
     @api.onchange("product_qty", "biko_density_fact")
     def _onchange_calculate_qty_kg(self):
         for rec in self:
