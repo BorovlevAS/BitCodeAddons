@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "BIKO: Модуль добавляет логику работы с ",
-    "version": "15.0.1.1.5",
+    "version": "15.0.1.1.6",
     "author": "Borovlev A.S.",
     "company": "BIKO Solutions",
     "depends": [

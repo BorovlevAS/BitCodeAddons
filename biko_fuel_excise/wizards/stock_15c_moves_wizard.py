@@ -36,6 +36,7 @@ class Stock15CMovesWizard(models.TransientModel):
                         sml.product_id, 
                         sml.id as move_id,
                         sml.date,
+                        sml.lot_id as lot_id,
                         sml.location_dest_id as location_id,
                         locations.name,
                         case when (location_dest_id=locations.id and sml.date < %s) then sml.biko_product_qty_15c_done else 0 end as qty_start,
@@ -49,6 +50,7 @@ class Stock15CMovesWizard(models.TransientModel):
                         sml.product_id, 
                         sml.move_id,
                         sml.date,
+                        sml.lot_id,
                         sml.location_id,
                         locations.name,
                         case when (location_id=locations.id  and sml.date <%s) then -sml.biko_product_qty_15c_done else 0 end,
@@ -62,6 +64,7 @@ class Stock15CMovesWizard(models.TransientModel):
                 select 
                     moves.product_id, 
                     moves.location_id, 
+                    moves.lot_id,
                     products.categ_id as category_id,
                     sum(moves.qty_start) as qty_start,
                     sum(moves.qty_plus) as qty_in,
@@ -76,7 +79,7 @@ class Stock15CMovesWizard(models.TransientModel):
                     left join product_template as pt on (pp.product_tmpl_id=pt.id)
                 ) as products on (moves.product_id = products.prod_id)
                 where moves.product_id is not null
-                group by (moves.product_id,moves.location_id,products.categ_id)
+                group by (moves.product_id,moves.location_id,moves.lot_id,products.categ_id)
 
         """
         result = self.env.cr.execute(

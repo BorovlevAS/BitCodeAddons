@@ -165,7 +165,7 @@ class PurchaseOrderLine(models.Model):
                         "product_id": self.product_id.id,
                         "biko_density_15c": self.biko_density_15c,
                         "company_id": self.company_id.id,
-                        "name": self.product_id.name + " " + str(self.biko_density_15c),
+                        "name": str(self.biko_density_15c),
                     }
                 )
         else:
