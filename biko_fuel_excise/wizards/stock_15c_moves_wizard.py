@@ -1,3 +1,5 @@
+import uuid
+
 from odoo import api, fields, models, _, tools
 from odoo.exceptions import ValidationError
 
@@ -18,8 +20,10 @@ class Stock15CMovesWizard(models.TransientModel):
         if self.end_date < self.start_date:
             raise ValidationError(_("End Date should be greater than Start Date."))
 
-    def fill_moves_data(self):
-        self.env["stock.15c.moves.report"].sudo().search([]).unlink()
+    def fill_moves_data(self, unique_id):
+        self.env["stock.15c.moves.report"].sudo().search(
+            [("uid", "=", unique_id)]
+        ).unlink()
         sql = """
             with 
                 locations as (
@@ -32,6 +36,7 @@ class Stock15CMovesWizard(models.TransientModel):
                         sml.product_id, 
                         sml.id as move_id,
                         sml.date,
+                        sml.lot_id as lot_id,
                         sml.location_dest_id as location_id,
                         locations.name,
                         case when (location_dest_id=locations.id and sml.date < %s) then sml.biko_product_qty_15c_done else 0 end as qty_start,
@@ -45,6 +50,7 @@ class Stock15CMovesWizard(models.TransientModel):
                         sml.product_id, 
                         sml.move_id,
                         sml.date,
+                        sml.lot_id,
                         sml.location_id,
                         locations.name,
                         case when (location_id=locations.id  and sml.date <%s) then -sml.biko_product_qty_15c_done else 0 end,
@@ -58,6 +64,7 @@ class Stock15CMovesWizard(models.TransientModel):
                 select 
                     moves.product_id, 
                     moves.location_id, 
+                    moves.lot_id,
                     products.categ_id as category_id,
                     sum(moves.qty_start) as qty_start,
                     sum(moves.qty_plus) as qty_in,
@@ -72,7 +79,7 @@ class Stock15CMovesWizard(models.TransientModel):
                     left join product_template as pt on (pp.product_tmpl_id=pt.id)
                 ) as products on (moves.product_id = products.prod_id)
                 where moves.product_id is not null
-                group by (moves.product_id,moves.location_id,products.categ_id)
+                group by (moves.product_id,moves.location_id,moves.lot_id,products.categ_id)
 
         """
         result = self.env.cr.execute(
@@ -93,11 +100,14 @@ class Stock15CMovesWizard(models.TransientModel):
         data = self.env.cr.dictfetchall()
 
         for item in data:
+            item.update({"uid": unique_id})
             self.env["stock.15c.moves.report"].sudo().create(item)
 
     def open_report(self):
         self.check_date_range()
-        self.fill_moves_data()
+
+        unique_id = uuid.uuid4().hex
+        self.fill_moves_data(unique_id)
 
         action = {
             "name": "Stock 15C Moves",
@@ -106,6 +116,7 @@ class Stock15CMovesWizard(models.TransientModel):
             "view_type": "pivot",
             "res_model": "stock.15c.moves.report",
             "view_id": self.env.ref("biko_fuel_excise.biko_stock15c_moves").id,
+            "domain": [("uid", "=", unique_id)],
         }
 
         return action

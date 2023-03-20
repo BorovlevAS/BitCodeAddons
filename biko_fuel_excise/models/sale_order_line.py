@@ -6,15 +6,32 @@ from odoo.tools.float_utils import float_compare
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    biko_density_fact = fields.Float(string="Density")
-    biko_density_15c = fields.Float(string="Density at 15 C")
-    biko_product_qty_15c = fields.Float(string="Quantity at 15 C")
-    biko_kg_qty_15c = fields.Float(string="Qty in Kg")
+    biko_density_fact = fields.Float(string="Density", digits=(6, 4))
+    biko_lot_id = fields.Many2one(
+        "stock.production.lot",
+        "Lot",
+        domain="[('product_id', '=', product_id)]",
+        copy=False,
+    )
+    biko_density_15c = fields.Float(
+        related="biko_lot_id.biko_density_15c",
+        digits=(6, 4),
+        string="Density at 15 C",
+    )
+    biko_product_qty_15c = fields.Float(
+        string="Quantity at 15 C",
+        digits="Product Unit of Measure",
+    )
+    biko_kg_qty = fields.Float(
+        string="Qty in Kg",
+        digits="Product Unit of Measure",
+    )
 
     biko_qty_15c_deliv = fields.Float(
         compute="_compute_biko_qty_15c_deliv",
         string="15 C Delivered",
         store=True,
+        digits="Product Unit of Measure",
     )
 
     biko_qty_15c_to_invoice = fields.Float(
@@ -30,6 +47,24 @@ class SaleOrderLine(models.Model):
         store=True,
         digits="Product Unit of Measure",
     )
+
+    # Form view methods
+    @api.onchange("product_uom_qty", "biko_density_fact")
+    def _onchange_product_uom_qty(self):
+        for rec in self:
+            rec.biko_kg_qty = rec.product_uom_qty * rec.biko_density_fact
+            if rec.biko_density_15c:
+                rec.biko_product_qty_15c = rec.biko_kg_qty / rec.biko_density_15c
+            else:
+                rec.biko_product_qty_15c = 0.0
+
+    @api.onchange("biko_density_15c")
+    def _onchange_calculate_qty_15c(self):
+        for rec in self:
+            if rec.biko_density_15c:
+                rec.biko_product_qty_15c = rec.biko_kg_qty / rec.biko_density_15c
+            else:
+                rec.biko_product_qty_15c = 0.0
 
     @api.depends(
         "invoice_lines.move_id.state",
@@ -107,6 +142,7 @@ class SaleOrderLine(models.Model):
                     )
                 line.biko_qty_15c_deliv = qty
 
+    # Stock methods
     def _prepare_procurement_values(self, group_id=False):
         """Prepare specific key for moves or other components that will be created from a stock rule
         comming from a sale order line. This method could be override in order to add other custom key that could
@@ -120,7 +156,8 @@ class SaleOrderLine(models.Model):
                 "biko_density_fact": self.biko_density_fact,
                 "biko_density_15c": self.biko_density_15c,
                 "biko_product_qty_15c": self.biko_product_qty_15c,
-                "biko_kg_qty_15c": self.biko_kg_qty_15c,
+                "biko_kg_qty_15c": self.biko_kg_qty,
+                "restrict_lot_id": self.biko_lot_id.id,
             }
         )
         return values
@@ -231,6 +268,21 @@ class SaleOrderLine(models.Model):
                 pickings_to_confirm.action_confirm()
         return True
 
+    def _prepare_invoice_line(self, **optional_values):
+
+        self.ensure_one()
+        res = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
+        res.update(
+            {
+                "biko_density_fact": self.biko_density_fact,
+                "biko_density_15c": self.biko_density_15c,
+                "biko_product_qty_15c": self.biko_qty_15c_to_invoice,
+                "biko_kg_qty_15c": self.biko_kg_qty,
+            }
+        )
+        return res
+
+    # Global object's methods
     def write(self, values):
         lines = self.env["sale.order.line"]
         if "biko_product_qty_15c" in values:
@@ -247,22 +299,3 @@ class SaleOrderLine(models.Model):
             )
 
         return res
-
-    def _prepare_invoice_line(self, **optional_values):
-
-        self.ensure_one()
-        res = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
-        res.update(
-            {
-                "biko_density_fact": self.biko_density_fact,
-                "biko_density_15c": self.biko_density_15c,
-                "biko_product_qty_15c": self.biko_qty_15c_to_invoice,
-                "biko_kg_qty_15c": self.biko_kg_qty_15c,
-            }
-        )
-        return res
-
-    @api.onchange("product_uom_qty", "biko_density_fact")
-    def _onchange_product_uom_qty(self):
-        for rec in self:
-            rec.biko_kg_qty_15c = rec.product_uom_qty * rec.biko_density_fact

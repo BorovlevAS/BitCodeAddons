@@ -8,9 +8,11 @@ class ReportStock15CMoves(models.Model):
     # _auto = False
     _description = "Report stock 15C moves"
 
+    uid = fields.Char(readonly=True)
     product_id = fields.Many2one("product.product", "Product", readonly=True)
     category_id = fields.Many2one("product.category", string="Category", readonly=True)
     location_id = fields.Many2one("stock.location", "Location", readonly=True)
+    lot_id = fields.Many2one("stock.production.lot", "Lot", readonly=True)
     qty_start = fields.Float("Start Quantity", readonly=True)
     qty_end = fields.Float("End Quantity", readonly=True)
     qty_in = fields.Float("Quantity In", readonly=True)

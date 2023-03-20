@@ -6,18 +6,18 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='products']//tree/field[@name='qty_received']" position="before">
-                <field name="biko_density_fact" 
-                    attrs="{
+                <field name="biko_density_fact" attrs="{
                         'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))],
                         'required': [('display_type', '=', False)]
-                    }"
-                    force_save="1" optional="show"/>
-                <field name="biko_density_15c"
-                    attrs="{
+                    }" force_save="1" optional="show"/>
+                <field name="biko_qty_kg" attrs="{
                         'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))],
                         'required': [('display_type', '=', False)]
-                    }"
-                    force_save="1" optional="show"/>
+                    }" force_save="1" optional="show"/>
+                <field name="biko_density_15c" attrs="{
+                        'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))],
+                        'required': [('display_type', '=', False)]
+                    }" force_save="1" optional="show"/>
                 <field name="biko_product_qty_15c" optional="show"/>
             </xpath>
         </field>

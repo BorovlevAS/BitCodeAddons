@@ -18,6 +18,7 @@ class StockRule(models.Model):
             "biko_density_15c",
             "biko_product_qty_15c",
             "biko_kg_qty_15c",
+            "restrict_lot_id",
         ]
         return fields
 
@@ -124,7 +125,3 @@ class StockRule(models.Model):
         if procurement_errors:
             raise_exception(procurement_errors)
         return True
-
-
-# _get_stock_move_values
-# _get_custom_move_fields

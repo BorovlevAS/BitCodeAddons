@@ -1,17 +1,21 @@
 from collections import defaultdict
 
-from odoo import _, api, models, fields
+from odoo import _, api, exceptions, models, fields
 from odoo.exceptions import UserError
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    biko_density_fact = fields.Float(string="Density", default=0.0)
-    biko_density_15c = fields.Float(string="Density at 15 C", default=0.0)
+    biko_density_fact = fields.Float(string="Density", digits=(6, 4), default=0.0)
+    biko_density_15c = fields.Float(
+        string="Density at 15 C", digits=(6, 4), default=0.0
+    )
     biko_product_qty_15c = fields.Float(string="Quantity at 15 C", default=0.0)
 
-    biko_kg_qty_15c = fields.Float(string="Qty in Kg")
+    biko_kg_qty_15c = fields.Float(
+        string="Qty in Kg"
+    )  # Количество топлива в кг. Фактическое. Ошибка в названии поля
 
     biko_product_qty_15c_done = fields.Float(
         string="Quantity at 15C Done",
@@ -26,6 +30,16 @@ class StockMove(models.Model):
         "Is quantity 15C done editable",
         compute="_compute_is_quantity_15c_done_editable",
     )
+
+    restrict_lot_id = fields.Many2one(
+        "stock.production.lot", string="Restrict Lot", copy=False
+    )
+
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
+        distinct_fields.append("restrict_lot_id")
+        return distinct_fields
 
     @api.depends("state", "picking_id", "product_id")
     def _compute_is_quantity_15c_done_editable(self):
@@ -132,6 +146,20 @@ class StockMove(models.Model):
         else:
             vals = dict(vals, biko_product_qty_15c=self.biko_product_qty_15c)
 
+        if self.restrict_lot_id:
+            if (
+                "lot_id" in vals
+                and vals["lot_id"] is not False
+                and vals["lot_id"] != self.restrict_lot_id.id
+            ):
+                raise exceptions.UserError(
+                    _(
+                        "Inconsistencies between reserved quant and lot restriction on "
+                        "stock move"
+                    )
+                )
+            vals["lot_id"] = self.restrict_lot_id.id
+
         return vals
 
     def _merge_moves_fields(self):
@@ -149,6 +177,7 @@ class StockMove(models.Model):
                 "biko_density_15c": self.biko_density_15c,
                 "biko_product_qty_15c": self.biko_product_qty_15c,
                 "biko_kg_qty_15c": self.biko_kg_qty_15c,
+                "restrict_lot_id": self.restrict_lot_id.id,
             }
         )
         return proc_values
@@ -165,3 +194,53 @@ class StockMove(models.Model):
                 ):
                     continue
                 move_line.biko_product_qty_15c_done = move_line.biko_product_qty_15c
+
+    def _get_available_quantity(
+        self,
+        location_id,
+        lot_id=None,
+        package_id=None,
+        owner_id=None,
+        strict=False,
+        allow_negative=False,
+    ):
+        self.ensure_one()
+        if not lot_id and self.restrict_lot_id:
+            lot_id = self.restrict_lot_id
+        return super()._get_available_quantity(
+            location_id,
+            lot_id=lot_id,
+            package_id=package_id,
+            owner_id=owner_id,
+            strict=strict,
+            allow_negative=allow_negative,
+        )
+
+    def _update_reserved_quantity(
+        self,
+        need,
+        available_quantity,
+        location_id,
+        lot_id=None,
+        package_id=None,
+        owner_id=None,
+        strict=True,
+    ):
+        self.ensure_one()
+        if self.restrict_lot_id:
+            lot_id = self.restrict_lot_id
+        return super()._update_reserved_quantity(
+            need,
+            available_quantity,
+            location_id,
+            lot_id=lot_id,
+            package_id=package_id,
+            owner_id=owner_id,
+            strict=strict,
+        )
+
+    def _split(self, qty, restrict_partner_id=False):
+        vals_list = super()._split(qty, restrict_partner_id=restrict_partner_id)
+        if vals_list and self.restrict_lot_id:
+            vals_list[0]["restrict_lot_id"] = self.restrict_lot_id.id
+        return vals_list
